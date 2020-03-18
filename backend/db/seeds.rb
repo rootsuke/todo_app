@@ -1,3 +1,10 @@
+# create User
+users = []
+50.times do |i|
+  users << User.new(name: Faker::Games::Pokemon.name)
+end
+User.import(users)
+
 # create Tasks
 tasks = []
 100.times do |i|
