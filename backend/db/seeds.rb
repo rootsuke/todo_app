@@ -7,8 +7,9 @@ User.import(users)
 
 # create Tasks
 tasks = []
-100.times do |i|
-  tasks << Task.new(title: "task_#{i}", content: "content_#{i}")
+user_ids = User.pluck(:id)
+user_ids.each_with_index do |user_id, i|
+  tasks << Task.new(title: "task_#{i}", content: "content_#{i}", user_id: user_id)
 end
 Task.import(tasks)
 
