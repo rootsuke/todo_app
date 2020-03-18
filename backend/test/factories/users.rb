@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :user do
-    name { "MyString" }
+    sequence(:name) { |n| "test_name#{n}"}
   end
 end

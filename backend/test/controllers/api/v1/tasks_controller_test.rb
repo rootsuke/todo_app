@@ -4,6 +4,7 @@ class Api::V1::TasksControllerTest < ActionDispatch::IntegrationTest
   # 概要: タスク一覧を取得し、件数が合っていることを検証
   # 期待値: ステータス200、20件取得
   test "should get show" do
+    create_list(:user, 10)
     create_list(:task, 10)
     create_list(:is_finish_task, 10)
 
@@ -17,6 +18,7 @@ class Api::V1::TasksControllerTest < ActionDispatch::IntegrationTest
   # 概要: タスク一覧を取得し、内容を検証
   # 期待値: 3件取得し、予測する内容であること
   test "should match task attributes" do
+    create(:user)
     create(:task)
     create(:is_finish_task)
     create(:is_finish_task, finish_type: 2)
