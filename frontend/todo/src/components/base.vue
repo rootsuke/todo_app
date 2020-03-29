@@ -17,7 +17,7 @@
 
   @Component({
     components: {
-      List,
+      'list': List,
     },
   })
   export default class Base extends Vue {
