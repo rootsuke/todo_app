@@ -10,6 +10,7 @@
         <template slot-scope="scope">
           parent: {{scope.row.finish_type}}
           <finish-type v-model="scope.row.finish_type" :task_id="scope.row.task_id"></finish-type>
+          <sl-select></sl-select>
         </template>
       </el-table-column>
     </el-table>
@@ -18,6 +19,7 @@
 
 <script lang="ts">
   import FinishType from './finish_type.vue';
+  import Select from './select/select.vue'
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { Table, TableColumn } from 'element-ui'
 
@@ -26,6 +28,7 @@
       'el-table': Table,
       'el-table-column': TableColumn,
       'finish-type': FinishType,
+      'sl-select': Select,
     }
   })
   export default class List extends Vue {
