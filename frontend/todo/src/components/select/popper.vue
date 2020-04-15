@@ -48,7 +48,7 @@
 
 <template>
   <div id="tooltip" role="tooltip">
-    <select-option v-for="option in options" :key="option.value" :value="option.value" :label="option.label" @select-option="onChange"></select-option>
+    <select-option v-for="option in options" :key="option.value" :value="option.value" :label="option.label" @select-option="onSelectOption"></select-option>
     <div id="arrow" data-popper-arrow></div>
   </div>
 </template>
@@ -57,7 +57,7 @@
   import axios from 'axios';
   import SelectOption from './option.vue'
   import { createPopper } from '@popperjs/core'
-  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 
   interface Response {
     data: {
@@ -122,8 +122,10 @@
       this.tooltip.removeAttribute('data-show');
     }
 
-    private onChange() {
+    @Emit('select-option')
+    private onSelectOption(val) {
       console.log("click")
+      return val
     }
   }
 </script>

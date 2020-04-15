@@ -10,19 +10,17 @@
 
 <template>
   <div>
-    <input v-model="query" type="text">
-    <ul>
-      <li v-for="item in filteredItems" :key="item.value" :value="item.value" @click="onChange($event.target.value)" class="option-item">{{ item.label }}</li>
-    </ul>
     <p>{{local_val}}</p>
     <el-select v-model="local_val" filterable placeholder="Select">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
+    <sl-select v-model="local_val"></sl-select>
   </div>
 </template>
 
 <script lang='ts'>
   import axios from 'axios'
+  import SlSelect from './select/select.vue'
   import { Select, Option } from 'element-ui'
   import { Prop, Component, Vue, Emit } from 'vue-property-decorator';
 
@@ -30,6 +28,7 @@
     components: {
       'el-select': Select,
       'el-option': Option,
+      'sl-select': SlSelect,
     }
   })
   export default class FinishType extends Vue {
@@ -38,6 +37,7 @@
 
     private prev = 1
     private query:string = ""
+    private visible: boolean = false
 
     get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
 
@@ -46,7 +46,7 @@
     }
 
     get local_val() { return this.value }
-    set local_val(val) { this.input(val) }
+    set local_val(val) { this.onChange(val) }
 
     private options: { label: string, value: number }[] = [
       { label: "one", value: 1 },
@@ -62,6 +62,8 @@
     ]
 
     private onChange(val: number): void {
+      this.visible = false
+      console.log(val)
       const url = '/api/v1/is_finish_tasks'
       const params = { task_id: this.task_id, finish_type: val }
       axios
