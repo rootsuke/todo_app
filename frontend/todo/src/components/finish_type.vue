@@ -14,7 +14,7 @@
     <el-select v-model="local_val" filterable placeholder="Select">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
-    <sl-select v-model="local_val"></sl-select>
+    <sl-select v-model="local_val" :options="options"></sl-select>
   </div>
 </template>
 
@@ -38,6 +38,19 @@
     private prev = 1
     private query:string = ""
     private visible: boolean = false
+
+    private options: { label: string, value: number }[] = [
+      { label: "one", value: 1 },
+      { label: "two", value: 2 },
+      { label: "three", value: 3 },
+      { label: "four", value: 4 },
+      { label: "five", value: 5 },
+      { label: "six", value: 6 },
+      { label: "seven", value: 7 },
+      { label: "eight", value: 8 },
+      { label: "nine", value: 9 },
+      { label: "ten", value: 10 }
+    ]
 
     get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
 

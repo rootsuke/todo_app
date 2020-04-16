@@ -72,22 +72,10 @@
   })
   export default class Popper extends Vue {
     @Prop({ required: true }) visible: boolean
+    @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
 
     private button: any = {}
     private tooltip: any = {}
-
-    private options: { label: string, value: number }[] = [
-      { label: "one", value: 1 },
-      { label: "two", value: 2 },
-      { label: "three", value: 3 },
-      { label: "four", value: 4 },
-      { label: "five", value: 5 },
-      { label: "six", value: 6 },
-      { label: "seven", value: 7 },
-      { label: "eight", value: 8 },
-      { label: "nine", value: 9 },
-      { label: "ten", value: 10 }
-    ]
 
     @Watch('visible')
     onChangeVisible(val: boolean) {
