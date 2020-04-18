@@ -1,5 +1,5 @@
 <style>
-  #tooltip {
+  .sl-dropdown {
     background: #333;
     color: white;
     font-weight: bold;
@@ -21,33 +21,33 @@
     background: #333;
   }
 
-  #tooltip[data-popper-placement^='top'] > #arrow {
+  .sl-dropdown[data-popper-placement^='top'] > #arrow {
     bottom: -4px;
   }
 
-  #tooltip[data-popper-placement^='bottom'] > #arrow {
+  .sl-dropdown[data-popper-placement^='bottom'] > #arrow {
     top: -4px;
   }
 
-  #tooltip[data-popper-placement^='left'] > #arrow {
+  .sl-dropdown[data-popper-placement^='left'] > #arrow {
     right: -4px;
   }
 
-  #tooltip[data-popper-placement^='right'] > #arrow {
+  .sl-dropdown[data-popper-placement^='right'] > #arrow {
     left: -4px;
   }
 
-  #tooltip {
+  .sl-dropdown {
     display: none;
   }
 
-  #tooltip[data-show] {
+  .sl-dropdown[data-show] {
     display: block;
   }
 </style>
 
 <template>
-  <div id="tooltip" role="tooltip">
+  <div class="sl-dropdown" role="tooltip">
     <select-option v-for="option in options" :key="option.value" :value="option.value" :label="option.label" @select-option="onSelectOption"></select-option>
     <div id="arrow" data-popper-arrow></div>
   </div>
@@ -75,13 +75,13 @@
     @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
 
     private button: any = {}
-    private tooltip: any = {}
+    private dropdown: any = {}
 
     @Watch('visible')
     onChangeVisible(val: boolean) {
       if (val) {
         this.show()
-        createPopper(this.button, this.tooltip, {
+        createPopper(this.button, this.dropdown, {
           modifiers: [
             {
               name: 'offset',
@@ -98,16 +98,16 @@
 
     private mounted() {
       this.button = this.$parent.$refs.reference.$el
-      this.tooltip = this.$el
+      this.dropdown = this.$el
     }
 
     private show() {
-      document.body.appendChild(this.tooltip)
-      this.tooltip.setAttribute('data-show', '');
+      document.body.appendChild(this.dropdown)
+      this.dropdown.setAttribute('data-show', '');
     }
 
     private hide() {
-      this.tooltip.removeAttribute('data-show');
+      this.dropdown.removeAttribute('data-show');
     }
 
     @Emit('select-option')
