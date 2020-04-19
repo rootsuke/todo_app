@@ -36,8 +36,6 @@
     @Prop({ required: true }) private task_id!: number
 
     private prev = 1
-    private query:string = ""
-    private visible: boolean = false
 
     private options: { label: string, value: number }[] = [
       { label: "one", value: 1 },
@@ -52,17 +50,10 @@
       { label: "ten", value: 10 }
     ]
 
-    get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
-
-    get filteredItems() {
-      return this.options.filter((option) => option.label.match(this.regexp))
-    }
-
     get local_val() { return this.value }
     set local_val(val) { this.onChange(val) }
 
     private onChange(val: number): void {
-      this.visible = false
       console.log(val)
       const url = '/api/v1/is_finish_tasks'
       const params = { task_id: this.task_id, finish_type: val }

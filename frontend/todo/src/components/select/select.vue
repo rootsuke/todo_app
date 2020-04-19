@@ -1,14 +1,14 @@
 <template>
   <div class="popper">
     {{value}}
-    <select-button v-click-outside="vcoConfig" ref="reference" @click="toggleMenu"></select-button>
-    <popper ref="popper" :visible="visible" :options="options" @select-option="onSelectOption"></popper>
+    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" @click="toggleMenu"></sl-input>
+    <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
 
 <script lang='ts'>
   import vClickOutside from 'v-click-outside'
-  import Button from './button.vue';
+  import Input from './input.vue';
   import Popper from './popper.vue'
   import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 
@@ -16,7 +16,7 @@
 
   @Component({
     components: {
-      'select-button': Button,
+      'sl-input': Input,
       'popper': Popper,
     }
   })
@@ -25,11 +25,18 @@
     @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
 
     private visible:boolean = false
+    private query:string = this.options.filter((option) => option.value === this.value)[0].label
 
     private vcoConfig = {
       handler: this.onClickOutside,
       middleware: this.isNotClickedDropdown,
       isActive: true
+    }
+
+    get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
+
+    get filteredItems() {
+      return this.options.filter((option) => option.label.match(this.regexp))
     }
     
     onClickOutside (event) {
