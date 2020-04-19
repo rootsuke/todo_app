@@ -11,10 +11,10 @@
 <template>
   <div>
     <p>{{local_val}}</p>
-    <el-select v-model="local_val" filterable placeholder="Select">
+    <el-select :value="local_val" @change="onChange" filterable placeholder="Select">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
-    <sl-select v-model="local_val" :options="options"></sl-select>
+    <sl-select :value="local_val" :options="options" @change="onChange"></sl-select>
   </div>
 </template>
 

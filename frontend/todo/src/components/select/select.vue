@@ -1,5 +1,6 @@
 <template>
   <div class="popper">
+    {{value}}
     <select-button v-click-outside="vcoConfig" ref="reference" @click="toggleMenu"></select-button>
     <popper ref="popper" :visible="visible" :options="options" @select-option="onSelectOption"></popper>
   </div>
@@ -20,6 +21,7 @@
     }
   })
   export default class Select extends Vue {
+    @Prop({ required: true }) value: string | number | boolean
     @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
 
     private visible:boolean = false
@@ -46,8 +48,13 @@
     onSelectOption(val) {
       console.log(val)
       this.visible = false
-      return val
+      if (val !== this.value) {
+        this.onChange(val)
+      }
     }
+
+    @Emit('change')
+    onChange(val) { }
 
   }
 </script>
