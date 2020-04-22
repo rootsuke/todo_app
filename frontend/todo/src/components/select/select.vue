@@ -10,7 +10,10 @@
   import vClickOutside from 'v-click-outside'
   import Input from './input.vue';
   import Popper from './popper.vue'
-  import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+  import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+
+  type Val = string | number | boolean;
+  type Event = { target: { className: string } };
 
   Vue.use(vClickOutside)
 
@@ -21,11 +24,12 @@
     }
   })
   export default class Select extends Vue {
-    @Prop({ required: true }) value: string | number | boolean
-    @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
+    @Prop({ required: true }) value: Val
+    @Prop({ required: true }) options: { label: string, value: Val }[]
 
     private visible:boolean = false
-    private query:string = this.options.filter((option) => option.value === this.value)[0].label
+    private query:string = ''
+    private selectedLabel:string = ''
 
     private vcoConfig = {
       handler: this.onClickOutside,
@@ -38,12 +42,26 @@
     get filteredItems() {
       return this.options.filter((option) => option.label.match(this.regexp))
     }
+
+    @Watch('visible')
+    onVisibleChange(val: boolean) {
+      if (val) {
+        this.query = ''
+      } else {
+        this.query = this.selectedLabel
+      }
+    }
+
+    mounted() {
+      this.selectedLabel = this.getSelectedLabel(this.value)
+      this.query = this.selectedLabel
+    }
     
-    onClickOutside (event) {
+    onClickOutside() {
       this.visible = false
     }
 
-    isNotClickedDropdown (event) {
+    isNotClickedDropdown(event: Event) {
       return event.target.className !== 'sl-dropdown'
     }
 
@@ -51,9 +69,15 @@
       this.visible = !this.visible
     }
 
+    getSelectedLabel(val: Val): string {
+      const selectedOption = this.options.find((option) => option.value === val)
+      return selectedOption ? selectedOption.label : ''
+    }
+
     @Emit('input')
-    onSelectOption(val) {
+    onSelectOption(val: Val) {
       console.log(val)
+      this.selectedLabel = this.getSelectedLabel(val)
       this.visible = false
       if (val !== this.value) {
         this.onChange(val)
@@ -61,7 +85,7 @@
     }
 
     @Emit('change')
-    onChange(val) { }
+    onChange(val: Val) { }
 
   }
 </script>
