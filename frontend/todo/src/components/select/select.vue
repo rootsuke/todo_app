@@ -43,9 +43,15 @@
       return this.options.filter((option) => option.label.match(this.regexp))
     }
 
+    @Watch('value')
+    onChangeValue(val: Val) {
+      this.selectedLabel = this.getSelectedLabel(this.value)
+      this.query = this.selectedLabel
+    }
+
     @Watch('visible')
-    onVisibleChange(val: boolean) {
-      if (val) {
+    onChangeVisible(isOpen: boolean) {
+      if (isOpen) {
         this.query = ''
       } else {
         this.query = this.selectedLabel
@@ -77,7 +83,6 @@
     @Emit('input')
     onSelectOption(val: Val) {
       console.log(val)
-      this.selectedLabel = this.getSelectedLabel(val)
       this.visible = false
       if (val !== this.value) {
         this.onChange(val)
