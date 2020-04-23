@@ -77,32 +77,41 @@
     private button: any = {}
     private dropdown: any = {}
 
+    private existsPopper: boolean = false
+
     @Watch('visible')
     onChangeVisible(val: boolean) {
       if (val) {
+        if (!this.existsPopper) {
+          this.onCreatePopper()
+        }
         this.show()
-        createPopper(this.button, this.dropdown, {
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 8],
-              },
-            },
-          ],
-        });
       } else {
         this.hide()
       }
     } 
 
     private mounted() {
+    }
+
+    onCreatePopper() {
       this.button = this.$parent.$refs.reference.$el
       this.dropdown = this.$el
+      createPopper(this.button, this.dropdown, {
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 8],
+            },
+          },
+        ],
+      })
+      document.body.appendChild(this.dropdown)
+      this.existsPopper = true
     }
 
     private show() {
-      document.body.appendChild(this.dropdown)
       this.dropdown.setAttribute('data-show', '');
     }
 
