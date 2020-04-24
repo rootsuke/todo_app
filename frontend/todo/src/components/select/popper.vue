@@ -76,6 +76,7 @@
 
     private button: any = {}
     private dropdown: any = {}
+    private popperInstance: any = {}
 
     private existsPopper: boolean = false
 
@@ -89,15 +90,12 @@
       } else {
         this.hide()
       }
-    } 
-
-    private mounted() {
     }
 
     onCreatePopper() {
       this.button = this.$parent.$refs.reference.$el
       this.dropdown = this.$el
-      createPopper(this.button, this.dropdown, {
+      this.popperInstance = createPopper(this.button, this.dropdown, {
         modifiers: [
           {
             name: 'offset',
@@ -107,11 +105,12 @@
           },
         ],
       })
-      document.body.appendChild(this.dropdown)
       this.existsPopper = true
+      document.body.appendChild(this.dropdown)
     }
 
     private show() {
+      this.popperInstance.update()
       this.dropdown.setAttribute('data-show', '');
     }
 
