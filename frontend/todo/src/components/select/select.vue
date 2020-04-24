@@ -1,7 +1,7 @@
 <template>
   <div class="popper">
     {{value}}
-    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" @click="toggleMenu"></sl-input>
+    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" :placeholder="placeholder" @click="toggleMenu"></sl-input>
     <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
@@ -30,6 +30,7 @@
     private visible:boolean = false
     private query:string = ''
     private selectedLabel:string = ''
+    private placeholder:string = ''
 
     private vcoConfig = {
       handler: this.onClickOutside,
@@ -53,8 +54,10 @@
     onChangeVisible(isOpen: boolean) {
       if (isOpen) {
         this.query = ''
+        this.placeholder = this.selectedLabel
       } else {
         this.query = this.selectedLabel
+        this.placeholder = ''
       }
     }
 

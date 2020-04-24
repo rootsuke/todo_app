@@ -1,5 +1,5 @@
 <template>
-  <input v-model="query" class="sl-input" aria-describedby="tooltip" @click="onClick" @blur="onBlur" />
+  <input v-model="query" :placeholder="placeholder" class="sl-input" aria-describedby="tooltip" @click="onClick" @blur="onBlur" />
 </template>
 
 <script lang='ts'>
@@ -8,6 +8,7 @@
   @Component
   export default class Button extends Vue {
     @Prop({ required: true }) value: string
+    @Prop({ required: true }) placeholder: string
 
     get query() { return this.value }
     set query(val: string) { this.input(val) }
