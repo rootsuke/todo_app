@@ -1,7 +1,7 @@
 <template>
   <div class="popper">
     {{value}}
-    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" :placeholder="placeholder" @click="toggleMenu"></sl-input>
+    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" :disabled="disabled" :placeholder="placeholder" @click="toggleMenu"></sl-input>
     <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
@@ -26,6 +26,7 @@
   export default class Select extends Vue {
     @Prop({ required: true }) value: Val
     @Prop({ required: true }) options: { label: string, value: Val }[]
+    @Prop({ required: false, default: false }) disabled: boolean
 
     private visible:boolean = false
     private query:string = ''
@@ -75,6 +76,7 @@
     }
 
     toggleMenu() {
+      if (this.disabled) { return }
       this.visible = !this.visible
     }
 

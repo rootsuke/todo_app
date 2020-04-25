@@ -1,5 +1,19 @@
+<style lang='scss' scoped>
+  .is-disabled {
+    cursor: not-allowed;
+  }
+</style>
+
 <template>
-  <input v-model="query" :placeholder="placeholder" class="sl-input" aria-describedby="tooltip" @click="onClick" @blur="onBlur" />
+  <input 
+    v-model="query"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :class="{ 'is-disabled': disabled }"
+    class="sl-input"
+    aria-describedby="tooltip"
+    @click="onClick"
+    @blur="onBlur" />
 </template>
 
 <script lang='ts'>
@@ -9,6 +23,7 @@
   export default class Button extends Vue {
     @Prop({ required: true }) value: string
     @Prop({ required: true }) placeholder: string
+    @Prop({ required: false, default: false }) disabled: boolean
 
     get query() { return this.value }
     set query(val: string) { this.input(val) }
