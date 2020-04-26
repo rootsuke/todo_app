@@ -17,7 +17,7 @@
 
   @Component({
     components: {
-      'list': List,
+      list: List,
     },
   })
   export default class Base extends Vue {
@@ -32,16 +32,11 @@
       const url = '/api/v1/tasks'
       axios.get(url)
         .then(this.onSuccessHandler)
-        .catch(this.onErrorHandler)
     }
 
     private onSuccessHandler(res: Response) {
-      console.log(res.data.info)
       this.tasks = res.data.info
     }
 
-    private onErrorHandler(err: Response) {
-      console.log(err.data.info)
-    }
   }
 </script>

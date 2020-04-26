@@ -21,15 +21,15 @@
 
   @Component
   export default class Button extends Vue {
-    @Prop({ required: true }) value: string
-    @Prop({ required: true }) placeholder: string
-    @Prop({ required: false, default: false }) disabled: boolean
+    @Prop({ required: true }) private value: string
+    @Prop({ required: true }) private placeholder: string
+    @Prop({ required: false, default: false }) private disabled: boolean
 
     get query() { return this.value }
     set query(val: string) { this.input(val) }
 
     @Emit('input')
-    private input(val: string) {}
+    private input(val: string) { return val }
 
     @Emit('click')
     private onClick() {}

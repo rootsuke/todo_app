@@ -59,29 +59,30 @@
   import { createPopper } from '@popperjs/core'
   import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 
+  type Val = string | number | boolean;
   interface Response {
     data: {
       info: object[],
-    }
+    },
   }
 
   @Component({
     components: {
       'select-option': SelectOption,
-    }
+    },
   })
   export default class Popper extends Vue {
-    @Prop({ required: true }) visible: boolean
-    @Prop({ required: true }) options: { label: string, value: string | number | boolean }[]
+    @Prop({ required: true }) private visible: boolean
+    @Prop({ required: true }) private options: Array<{ label: string, value: string | number | boolean }>
 
-    private button: any = {}
+    private reference: any = {}
     private dropdown: any = {}
     private popperInstance: any = {}
 
     private existsPopper: boolean = false
 
     @Watch('visible')
-    onChangeVisible(val: boolean) {
+    private onChangeVisible(val: boolean): void {
       if (val) {
         if (!this.existsPopper) {
           this.onCreatePopper()
@@ -92,10 +93,11 @@
       }
     }
 
-    onCreatePopper() {
-      this.button = this.$parent.$refs.reference.$el
+    private onCreatePopper(): void {
+      const reference = this.$parent.$refs.reference as Vue
+      this.reference = reference.$el
       this.dropdown = this.$el
-      this.popperInstance = createPopper(this.button, this.dropdown, {
+      this.popperInstance = createPopper(this.reference as Element, this.dropdown as HTMLElement, {
         modifiers: [
           {
             name: 'offset',
@@ -109,17 +111,17 @@
       document.body.appendChild(this.dropdown)
     }
 
-    private show() {
+    private show(): void {
       this.popperInstance.update()
       this.dropdown.setAttribute('data-show', '');
     }
 
-    private hide() {
+    private hide(): void {
       this.dropdown.removeAttribute('data-show');
     }
 
     @Emit('select-option')
-    private onSelectOption(val) {
+    private onSelectOption(val: Val): Val {
       console.log("click")
       return val
     }

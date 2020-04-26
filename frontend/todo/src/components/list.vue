@@ -26,7 +26,7 @@
       'el-table': Table,
       'el-table-column': TableColumn,
       'finish-type': FinishType,
-    }
+    },
   })
   export default class List extends Vue {
     @Prop() private tasks!: object[]

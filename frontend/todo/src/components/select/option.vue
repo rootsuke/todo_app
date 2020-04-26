@@ -4,14 +4,15 @@
 
 <script lang='ts'>
   import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
+  type Val = string | number | boolean;
 
   @Component
   export default class SelectOption extends Vue {
-    @Prop({ required: true }) value: string | number | boolean
-    @Prop({ required: true }) label: string
+    @Prop({ required: true }) private value: Val
+    @Prop({ required: true }) private label: string
 
     @Emit('select-option')
-    private onSelectOption(event): string | number | boolean {
+    private onSelectOption(): Val {
       return this.value
     }
   }

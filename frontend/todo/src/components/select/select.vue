@@ -13,7 +13,7 @@
   import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 
   type Val = string | number | boolean;
-  type Event = { target: { className: string } };
+  interface Event { target: { className: string } };
 
   Vue.use(vClickOutside)
 
@@ -21,22 +21,22 @@
     components: {
       'sl-input': Input,
       'popper': Popper,
-    }
+    },
   })
   export default class Select extends Vue {
-    @Prop({ required: true }) value: Val
-    @Prop({ required: true }) options: { label: string, value: Val }[]
-    @Prop({ required: false, default: false }) disabled: boolean
+    @Prop({ required: true }) private value: Val
+    @Prop({ required: true }) private options: Array<{ label: string, value: Val }>
+    @Prop({ required: false, default: false }) private disabled: boolean
 
-    private visible:boolean = false
-    private query:string = ''
-    private selectedLabel:string = ''
-    private placeholder:string = ''
+    private visible: boolean = false
+    private query: string = ''
+    private selectedLabel: string = ''
+    private placeholder: string = ''
 
     private vcoConfig = {
       handler: this.onClickOutside,
       middleware: this.isNotClickedDropdown,
-      isActive: true
+      isActive: true,
     }
 
     get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
@@ -46,13 +46,13 @@
     }
 
     @Watch('value')
-    onChangeValue(val: Val) {
+    private onChangeValue(val: Val): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
       this.query = this.selectedLabel
     }
 
     @Watch('visible')
-    onChangeVisible(isOpen: boolean) {
+    private onChangeVisible(isOpen: boolean): void {
       if (isOpen) {
         this.query = ''
         this.placeholder = this.selectedLabel
@@ -62,31 +62,31 @@
       }
     }
 
-    mounted() {
+    private mounted(): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
       this.query = this.selectedLabel
     }
-    
-    onClickOutside() {
+
+    private onClickOutside(): void {
       this.visible = false
     }
 
-    isNotClickedDropdown(event: Event) {
+    private isNotClickedDropdown(event: Event): boolean {
       return event.target.className !== 'sl-dropdown'
     }
 
-    toggleMenu() {
+    private toggleMenu(): void {
       if (this.disabled) { return }
       this.visible = !this.visible
     }
 
-    getSelectedLabel(val: Val): string {
+    private getSelectedLabel(val: Val): string {
       const selectedOption = this.options.find((option) => option.value === val)
       return selectedOption ? selectedOption.label : ''
     }
 
     @Emit('input')
-    onSelectOption(val: Val) {
+    private onSelectOption(val: Val): void {
       console.log(val)
       this.visible = false
       if (val !== this.value) {
@@ -95,7 +95,7 @@
     }
 
     @Emit('change')
-    onChange(val: Val) { }
+    private onChange(val: Val) { return val }
 
   }
 </script>
