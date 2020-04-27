@@ -1,7 +1,6 @@
 <template>
-  <div class="popper">
-    {{value}}
-    <sl-input v-click-outside="vcoConfig" v-model="query" ref="reference" :disabled="disabled" :placeholder="placeholder" @click="toggleMenu"></sl-input>
+  <div v-click-outside="vcoConfig" class="sl-select" @click="toggleMenu">
+    <sl-input v-model="query" ref="reference" :disabled="disabled" :placeholder="placeholder"></sl-input>
     <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
@@ -32,10 +31,12 @@
     private query: string = ''
     private selectedLabel: string = ''
     private placeholder: string = ''
+    private mousedownClass: string = ''
 
     private vcoConfig = {
       handler: this.onClickOutside,
       middleware: this.isNotClickedDropdown,
+      events: ['mousedown', 'mouseup'],
       isActive: true,
     }
 
@@ -71,8 +72,14 @@
       this.visible = false
     }
 
-    private isNotClickedDropdown(event: Event): boolean {
-      return event.target.className !== 'sl-dropdown'
+    private isNotClickedDropdown(event: PointerEvent): boolean {
+      const className = event.target.className
+      if (event.type === 'mousedown') {
+        this.mousedownClass = className
+        return false
+      } else {
+        return this.mousedownClass !== 'sl-option-item' && className !== 'sl-option-item'
+      }
     }
 
     private toggleMenu(): void {

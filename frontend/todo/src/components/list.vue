@@ -9,7 +9,7 @@
       <el-table-column prop="finish_type" label="属性" width="180" sortable>
         <template slot-scope="scope">
           parent: {{scope.row.finish_type}}
-          <finish-type v-model="scope.row.finish_type" :task_id="scope.row.task_id"></finish-type>
+          <finish-type v-model="scope.row.finish_type" :taskId="scope.row.task_id"></finish-type>
         </template>
       </el-table-column>
     </el-table>

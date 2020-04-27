@@ -1,17 +1,7 @@
-<style lang='scss'>
-  .option-item {
-    list-style: none;
-    cursor: pointer;
-    &:hover {
-      background: azure;
-    }
-  }
-</style>
-
 <template>
   <div>
     <p>{{local_val}}</p>
-    <el-select :value="local_val" @change="onChange"  placeholder="Select">
+    <el-select :value="local_val" @change="onChange"  placeholder="Select" style="margin-bottom:20px;">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
     <sl-select :value="local_val" :options="options" @change="onChange"></sl-select>

@@ -1,5 +1,15 @@
+<style lang='scss' scoped>
+  .sl-option-item {
+    list-style: none;
+    cursor: pointer;
+    &:hover {
+      background: azure;
+    }
+  }
+</style>
+
 <template>
-  <li @click.stop="onSelectOption" class="option-item">{{ label }}</li>
+  <li @click.stop="onSelectOption" class="sl-option-item">{{ label }}</li>
 </template>
 
 <script lang='ts'>

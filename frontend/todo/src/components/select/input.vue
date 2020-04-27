@@ -12,7 +12,6 @@
     :class="{ 'is-disabled': disabled }"
     class="sl-input"
     aria-describedby="tooltip"
-    @click="onClick"
     @blur="onBlur" />
 </template>
 
@@ -20,7 +19,7 @@
   import { Component, Vue, Emit, Prop } from 'vue-property-decorator'
 
   @Component
-  export default class Button extends Vue {
+  export default class Input extends Vue {
     @Prop({ required: true }) private value: string
     @Prop({ required: true }) private placeholder: string
     @Prop({ required: false, default: false }) private disabled: boolean
@@ -30,9 +29,6 @@
 
     @Emit('input')
     private input(val: string) { return val }
-
-    @Emit('click')
-    private onClick() {}
 
     @Emit('blur')
     private onBlur() {}
