@@ -72,8 +72,8 @@
       this.visible = false
     }
 
-    private isNotClickedDropdown(event: PointerEvent): boolean {
-      const className = event.target.className
+    private isNotClickedDropdown(event: MouseEvent): boolean {
+      const className = (<HTMLElement>event.target).className
       if (event.type === 'mousedown') {
         this.mousedownClass = className
         return false
