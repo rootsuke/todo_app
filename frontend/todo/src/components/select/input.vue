@@ -9,6 +9,7 @@
     v-model="query"
     :placeholder="placeholder"
     :disabled="disabled"
+    :readonly="readonly"
     :class="{ 'is-disabled': disabled }"
     class="sl-input"
     aria-describedby="tooltip"
@@ -23,6 +24,7 @@
     @Prop({ required: true }) private value: string
     @Prop({ required: true }) private placeholder: string
     @Prop({ required: false, default: false }) private disabled: boolean
+    @Prop({ required: false, default: false }) private readonly: boolean
 
     get query() { return this.value }
     set query(val: string) { this.input(val) }

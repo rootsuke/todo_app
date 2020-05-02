@@ -1,6 +1,12 @@
+<style lang='scss' scoped>
+  .sl-select-input {
+    cursor: pointer;
+  }
+</style>
+
 <template>
   <div v-click-outside="vcoConfig" class="sl-select" @click="toggleMenu">
-    <sl-input v-model="query" ref="reference" :disabled="disabled" :placeholder="placeholder"></sl-input>
+    <sl-input v-model="tmpQuery" ref="reference" :disabled="disabled" :readonly="readonly" :placeholder="placeholder" class="sl-select-input"></sl-input>
     <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
@@ -26,8 +32,10 @@
     @Prop({ required: true }) private value: Val
     @Prop({ required: true }) private options: Array<{ label: string, value: Val }>
     @Prop({ required: false, default: false }) private disabled: boolean
+    @Prop({ required: false, default: false }) private filterable: boolean
 
     private visible: boolean = false
+    private tmpQuery: string = ''
     private query: string = ''
     private selectedLabel: string = ''
     private placeholder: string = ''
@@ -40,6 +48,8 @@
       isActive: true,
     }
 
+    get readonly() { return !this.filterable || !this.visible }
+
     get regexp() { return new RegExp(`.*${this.query}.*`, 'g') }
 
     get filteredItems() {
@@ -49,23 +59,34 @@
     @Watch('value')
     private onChangeValue(val: Val): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
-      this.query = this.selectedLabel
+      this.tmpQuery = this.selectedLabel
     }
 
     @Watch('visible')
     private onChangeVisible(isOpen: boolean): void {
       if (isOpen) {
-        this.query = ''
-        this.placeholder = this.selectedLabel
+        if (this.filterable) {
+          this.tmpQuery = ''
+          this.placeholder = this.selectedLabel
+        }
       } else {
-        this.query = this.selectedLabel
-        this.placeholder = ''
+        if (this.selectedLabel && this.filterable) {
+          this.tmpQuery = this.selectedLabel
+          this.placeholder = ''
+        }
+      }
+    }
+
+    @Watch('tmpQuery')
+    private onChangeTmpQuery(val: string): void {
+      if (this.filterable) {
+        this.query = this.tmpQuery
       }
     }
 
     private mounted(): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
-      this.query = this.selectedLabel
+      this.tmpQuery = this.selectedLabel
     }
 
     private onClickOutside(): void {
