@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+Font Awesome Free 5.13.0 by @fontawesome - https://fontawesome.com
+License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+-->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20190801 at Mon Mar 23 10:45:51 2020
+ By Robert Madole
+Copyright (c) Font Awesome
+</metadata>
+<defs>
+<font id="FontAwesome5Free-Regular" horiz-adv-x="512" >
+  <font-face 
+    font-family="Font Awesome 5 Free Regular"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="512"
+    panose-1="2 0 5 3 0 0 0 0 0 0"
+    ascent="448"
+    descent="-64"
+    bbox="-0.0663408 -64.0662 640.01 448.1"
+    underline-thickness="25"
+    underline-position="-50"
+    unicode-range="U+0020-F5C8"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="times-circle" unicode="&#xf057;" 
+d="M256 440c137 0 248 -111 248 -248s-111 -248 -248 -248s-248 111 -248 248s111 248 248 248zM256 -8c110.5 0 200 89.5 200 200s-89.5 200 -200 200s-200 -89.5 -200 -200s89.5 -200 200 -200zM357.8 254.2l-62.2002 -62.2002l62.2002 -62.2002
+c4.7002 -4.7002 4.7002 -12.2998 0 -17l-22.5996 -22.5996c-4.7002 -4.7002 -12.2998 -4.7002 -17 0l-62.2002 62.2002l-62.2002 -62.2002c-4.7002 -4.7002 -12.2998 -4.7002 -17 0l-22.5996 22.5996c-4.7002 4.7002 -4.7002 12.2998 0 17l62.2002 62.2002l-62.2002 62.2002
+c-4.7002 4.7002 -4.7002 12.2998 0 17l22.5996 22.5996c4.7002 4.7002 12.2998 4.7002 17 0l62.2002 -62.2002l62.2002 62.2002c4.7002 4.7002 12.2998 4.7002 17 0l22.5996 -22.5996c4.7002 -4.7002 4.7002 -12.2998 0 -17z" />
+  </font>
+</defs></svg>
