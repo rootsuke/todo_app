@@ -1,12 +1,28 @@
-<style lang='scss' scoped>
-  .sl-select-input {
+<style lang='scss'>
+  .sl-select .sl-input {
+    cursor: pointer;
+  }
+
+  .sl-icon {
     cursor: pointer;
   }
 </style>
 
 <template>
-  <div v-click-outside="vcoConfig" class="sl-select" @click="toggleMenu">
-    <sl-input v-model="tmpQuery" ref="reference" :disabled="disabled" :readonly="readonly" :placeholder="placeholder" class="sl-select-input"></sl-input>
+  <div v-click-outside="vcoConfig" class="sl-select" @click.stop="toggleMenu">
+    <sl-input
+      v-model="tmpQuery"
+      ref="reference"
+      :disabled="disabled"
+      :readonly="readonly"
+      :placeholder="currentPlaceholder"
+      @mouseenter.native="isInputHover = true"
+      @mouseleave.native="isInputHover = false">
+      <template slot="icons">
+        <i v-show="!showClearBtn" class="fas fa-chevron-down sl-icon"></i>
+        <i v-if="showClearBtn" class="far fa-times-circle sl-icon" @click.stop="onClear"></i>
+      </template>
+    </sl-input>
     <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
@@ -15,7 +31,7 @@
   import vClickOutside from 'v-click-outside'
   import Input from './input.vue';
   import Popper from './popper.vue'
-  import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
   type Val = string | number | boolean;
   interface Event { target: { className: string } };
@@ -31,15 +47,18 @@
   export default class Select extends Vue {
     @Prop({ required: true }) private value: Val
     @Prop({ required: true }) private options: Array<{ label: string, value: Val }>
+    @Prop({ required: false, default: 'please select' }) private placeholder: string
     @Prop({ required: false, default: false }) private disabled: boolean
     @Prop({ required: false, default: false }) private filterable: boolean
+    @Prop({ required: false, default: false }) private clearable: boolean
 
     private visible: boolean = false
     private tmpQuery: string = ''
     private query: string = ''
     private selectedLabel: string = ''
-    private placeholder: string = ''
+    private currentPlaceholder: string = ''
     private mousedownClass: string = ''
+    private isInputHover: boolean = false
 
     private vcoConfig = {
       handler: this.onClickOutside,
@@ -56,6 +75,10 @@
       return this.options.filter((option) => option.label.match(this.regexp))
     }
 
+    get showClearBtn() {
+      return this.isInputHover && this.filterable && !this.disabled && !!this.value
+    }
+
     @Watch('value')
     private onChangeValue(val: Val): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
@@ -65,14 +88,14 @@
     @Watch('visible')
     private onChangeVisible(isOpen: boolean): void {
       if (isOpen) {
-        if (this.filterable) {
+        if (this.selectedLabel && this.filterable) {
           this.tmpQuery = ''
-          this.placeholder = this.selectedLabel
+          this.currentPlaceholder = this.selectedLabel
         }
       } else {
-        if (this.selectedLabel && this.filterable) {
+        if (this.filterable) {
           this.tmpQuery = this.selectedLabel
-          this.placeholder = ''
+          this.currentPlaceholder = this.placeholder
         }
       }
     }
@@ -82,6 +105,10 @@
       if (this.filterable) {
         this.query = this.tmpQuery
       }
+    }
+
+    private created() {
+      this.currentPlaceholder = this.placeholder
     }
 
     private mounted(): void {
@@ -113,17 +140,30 @@
       return selectedOption ? selectedOption.label : ''
     }
 
-    @Emit('input')
     private onSelectOption(val: Val): void {
       console.log(val)
       this.visible = false
+      this.onInput(val)
       if (val !== this.value) {
         this.onChange(val)
       }
     }
 
-    @Emit('change')
-    private onChange(val: Val) { return val }
+    private onClear(): void {
+      console.log('clear')
+      this.visible = false
+      const val = ''
+      this.onInput(val)
+      this.$emit('clear')
+    }
+
+    private onInput(val: Val): void {
+      this.$emit('input', val)
+    }
+
+    private onChange(val: Val): void {
+      this.$emit('change', val)
+    }
 
   }
 </script>
