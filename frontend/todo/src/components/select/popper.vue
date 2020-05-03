@@ -44,11 +44,16 @@
   .sl-dropdown[data-show] {
     display: block;
   }
+
+  .empty-text {
+    list-style: none;
+  }
 </style>
 
 <template>
   <div class="sl-dropdown" role="tooltip">
     <select-option v-for="option in options" :key="option.value" :value="option.value" :label="option.label" @select-option="onSelectOption"></select-option>
+    <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
     <div id="arrow" data-popper-arrow></div>
   </div>
 </template>
@@ -80,6 +85,17 @@
     private popperInstance: any = {}
 
     private existsPopper: boolean = false
+
+    get isOptionsEmpty() {
+      return this.options.length === 0
+    }
+
+    @Watch('options')
+    private onChangeOptions(): void {
+      if (this.existsPopper) {
+        this.popperInstance.update()
+      }
+    }
 
     @Watch('visible')
     private onChangeVisible(val: boolean): void {
