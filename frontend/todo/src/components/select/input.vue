@@ -1,8 +1,28 @@
 <style lang='scss' scoped>
   .sl-input {
     box-sizing: border-box;
-    padding-right: 30px;
+    padding: 0 30px 0 15px;
     width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #606266;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    transition: border-color .3s cubic-bezier(.645,.045,.355,1);
+    transition-property: border-color;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition-delay: 0s;
+    &:hover {
+      border-color: #C0C4CC;
+    }
+    &:focus {
+      border-color: #409EFF;
+      outline: 0;
+    }
+    &::placeholder {
+      color: #C0C4CC;
+    }
   }
 
   .with-icons {
@@ -17,19 +37,22 @@
     text-align: center;
   }
 
-  .is-disabled {
-    cursor: not-allowed;
+  .is-disabled .sl-input {
+    background-color: #F5F7FA;
+    border-color: #E4E7ED;
+    color: #C0C4CC;
   }
 </style>
 
 <template>
-  <div class="sl-input-wrapper" :class="{ 'with-icons': hasIcons }">
+  <div
+    :class="{ 'with-icons': hasIcons, 'is-disabled': disabled }"
+    class="sl-input-wrapper">
     <input
       v-model="query"
       :placeholder="placeholder"
       :disabled="disabled"
       :readonly="readonly"
-      :class="{ 'is-disabled': disabled }"
       class="sl-input"
       aria-describedby="tooltip"
       @blur="onBlur" />

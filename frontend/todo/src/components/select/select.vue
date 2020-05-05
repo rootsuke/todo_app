@@ -2,9 +2,27 @@
   .sl-select .sl-input {
     cursor: pointer;
   }
+  
+  .sl-select .is-disabled .sl-input {
+    cursor: not-allowed;
+  }
 
   .sl-icon {
     cursor: pointer;
+    width: 25px;
+    height: 100%;
+    line-height: 40px;
+    color: #C0C4CC;
+    text-align: center;
+    transition: all .3s;
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+  }
+
+  .is-reverse {
+    transform: rotate(-180deg);
   }
 </style>
 
@@ -19,11 +37,11 @@
       @mouseenter.native="isInputHover = true"
       @mouseleave.native="isInputHover = false">
       <template slot="icons">
-        <i v-show="!showClearBtn" class="fas fa-chevron-down sl-icon"></i>
+        <i v-show="!showClearBtn" :class="{ 'is-reverse': isReverse }" class="fas fa-chevron-down sl-icon"></i>
         <i v-if="showClearBtn" class="far fa-times-circle sl-icon" @click.stop="onClear"></i>
       </template>
     </sl-input>
-    <popper ref="popper" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
+    <popper ref="popper" :selectedLabel="selectedLabel" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
   </div>
 </template>
 
@@ -76,7 +94,11 @@
     }
 
     get showClearBtn() {
-      return this.isInputHover && this.filterable && !this.disabled && !!this.value
+      return this.isInputHover && this.clearable && !this.disabled && !!this.value
+    }
+
+    get isReverse(): boolean {
+      return this.visible
     }
 
     @Watch('value')

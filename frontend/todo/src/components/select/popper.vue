@@ -1,12 +1,19 @@
 <style>
   .sl-dropdown {
-    background: #333;
-    color: white;
-    font-weight: bold;
-    padding: 4px 8px;
-    font-size: 13px;
+    box-sizing: border-box;
+    background-color: white;
+    color: #606266;
+    border: 1px solid #E4E7ED;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
+
+  .option-list {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 6px 0;
+  }
+
   #arrow,
   #arrow::before {
     position: absolute;
@@ -18,7 +25,7 @@
   #arrow::before {
     content: '';
     transform: rotate(45deg);
-    background: #333;
+    background-color: white;
   }
 
   .sl-dropdown[data-popper-placement^='top'] > #arrow {
@@ -52,8 +59,19 @@
 
 <template>
   <div class="sl-dropdown" role="tooltip">
-    <select-option v-for="option in options" :key="option.value" :value="option.value" :label="option.label" @select-option="onSelectOption"></select-option>
-    <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
+    <ul class="option-list">
+      <select-option
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value"
+        :label="option.label"
+        :selectedLabel="selectedLabel"
+        :isClearDefaultHover="isClearDefaultHover"
+        @select-option="onSelectOption"
+        @clear-default-hover="isClearDefaultHover = true">
+      </select-option>
+      <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
+    </ul>
     <div id="arrow" data-popper-arrow></div>
   </div>
 </template>
@@ -77,6 +95,7 @@
     },
   })
   export default class Popper extends Vue {
+    @Prop({ required: true }) private selectedLabel: string
     @Prop({ required: true }) private visible: boolean
     @Prop({ required: true }) private options: Array<{ label: string, value: string | number | boolean }>
 
@@ -85,6 +104,7 @@
     private popperInstance: any = {}
 
     private existsPopper: boolean = false
+    private isClearDefaultHover: boolean = false
 
     get isOptionsEmpty() {
       return this.options.length === 0
@@ -106,6 +126,7 @@
         this.show()
       } else {
         this.hide()
+        this.isClearDefaultHover = false
       }
     }
 
