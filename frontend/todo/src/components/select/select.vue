@@ -1,4 +1,8 @@
 <style lang='scss'>
+  .sl-select {
+    display: inline-block;
+  }
+
   .sl-select .sl-input {
     cursor: pointer;
   }
@@ -148,7 +152,7 @@
         this.mousedownClass = className
         return false
       } else {
-        return this.mousedownClass !== 'sl-option-item' && className !== 'sl-option-item'
+        return !(this.mousedownClass.includes('sl-option-item') || className.includes('sl-option-item'))
       }
     }
 

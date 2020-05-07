@@ -8,6 +8,7 @@
     color: #606266;
     border-radius: 4px;
     border: 1px solid #DCDFE6;
+    font-size: 14px;
     transition: border-color .3s cubic-bezier(.645,.045,.355,1);
     transition-property: border-color;
     transition-duration: 0.5s;

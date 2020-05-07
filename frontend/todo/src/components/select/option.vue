@@ -7,9 +7,6 @@
     color: #606266;
     height: 34px;
     line-height: 34px;
-    &:hover {
-      background: #F5F7FA;
-    }
   }
 
   .is-selected {
@@ -17,17 +14,17 @@
     font-weight: bold;
   }
 
-  .default-hover {
+  .is-hover {
     background: #F5F7FA;
   }
 </style>
 
 <template>
   <li
-    :class="{ 'is-selected': isSelected, 'default-hover': isDefaultHover }"
+    :class="{ 'is-selected': isSelected, 'is-hover': isHover }"
     class="sl-option-item"
     @click.stop="onSelectOption"
-    @mouseenter="clearDefaultHover">
+    @mouseenter.stop="onHoverOption">
     {{ label }}
   </li>
 </template>
@@ -41,23 +38,23 @@
     @Prop({ required: true }) private value: Val
     @Prop({ required: true }) private label: string
     @Prop({ required: true }) private selectedLabel: string
-    @Prop({ required: true }) private isClearDefaultHover: boolean
+    @Prop({ required: true }) private hoverIndex: number
+    @Prop({ required: true }) private index: number
 
     get isSelected(): boolean {
       return this.label === this.selectedLabel
     }
 
-    get isDefaultHover(): boolean {
-      return this.isSelected && !this.isClearDefaultHover
+    get isHover(): boolean {
+      return this.index === this.hoverIndex
     }
 
-    @Emit('select-option')
-    private onSelectOption(): Val {
-      return this.value
+    private onSelectOption(): void {
+      this.$emit('select-option', this.value)
     }
 
-    private clearDefaultHover(): void {
-      this.$emit('clear-default-hover')
+    private onHoverOption(): void {
+      this.$emit('hover-option', this.index)
     }
   }
 </script>

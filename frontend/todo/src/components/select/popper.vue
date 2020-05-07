@@ -53,7 +53,11 @@
   }
 
   .empty-text {
-    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
   }
 </style>
 
@@ -61,14 +65,15 @@
   <div class="sl-dropdown" role="tooltip">
     <ul class="option-list">
       <select-option
-        v-for="option in options"
+        v-for="(option, i) in options"
         :key="option.value"
         :value="option.value"
         :label="option.label"
         :selectedLabel="selectedLabel"
-        :isClearDefaultHover="isClearDefaultHover"
+        :hoverIndex="hoverIndex"
+        :index="i"
         @select-option="onSelectOption"
-        @clear-default-hover="isClearDefaultHover = true">
+        @hover-option="onHoverOption">
       </select-option>
       <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
     </ul>
@@ -104,7 +109,7 @@
     private popperInstance: any = {}
 
     private existsPopper: boolean = false
-    private isClearDefaultHover: boolean = false
+    private hoverIndex: number = 0
 
     get isOptionsEmpty() {
       return this.options.length === 0
@@ -120,13 +125,15 @@
     @Watch('visible')
     private onChangeVisible(val: boolean): void {
       if (val) {
+        if (this.selectedLabel) {
+          this.hoverIndex = this.options.findIndex((option) => option.label == this.selectedLabel)
+        }
         if (!this.existsPopper) {
           this.onCreatePopper()
         }
         this.show()
       } else {
         this.hide()
-        this.isClearDefaultHover = false
       }
     }
 
@@ -155,6 +162,10 @@
 
     private hide(): void {
       this.dropdown.removeAttribute('data-show');
+    }
+
+    private onHoverOption(index: number): void {
+      this.hoverIndex = index
     }
 
     @Emit('select-option')
