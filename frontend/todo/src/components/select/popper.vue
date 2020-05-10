@@ -1,5 +1,5 @@
 <style>
-  .sl-dropdown {
+  .sl-popper {
     box-sizing: border-box;
     background-color: white;
     color: #606266;
@@ -14,41 +14,41 @@
     padding: 6px 0;
   }
 
-  #arrow,
-  #arrow::before {
+  .arrow,
+  .arrow::before {
     position: absolute;
     width: 8px;
     height: 8px;
     z-index: -1;
   }
 
-  #arrow::before {
+  .arrow::before {
     content: '';
     transform: rotate(45deg);
     background-color: white;
   }
 
-  .sl-dropdown[data-popper-placement^='top'] > #arrow {
+  .sl-popper[data-popper-placement^='top'] > .arrow {
     bottom: -4px;
   }
 
-  .sl-dropdown[data-popper-placement^='bottom'] > #arrow {
+  .sl-popper[data-popper-placement^='bottom'] > .arrow {
     top: -4px;
   }
 
-  .sl-dropdown[data-popper-placement^='left'] > #arrow {
+  .sl-popper[data-popper-placement^='left'] > .arrow {
     right: -4px;
   }
 
-  .sl-dropdown[data-popper-placement^='right'] > #arrow {
+  .sl-popper[data-popper-placement^='right'] > .arrow {
     left: -4px;
   }
 
-  .sl-dropdown {
+  .sl-popper {
     display: none;
   }
 
-  .sl-dropdown[data-show] {
+  .sl-popper[data-show] {
     display: block;
   }
 
@@ -62,7 +62,7 @@
 </style>
 
 <template>
-  <div class="sl-dropdown" role="tooltip">
+  <div class="sl-popper" role="tooltip">
     <ul class="option-list">
       <select-option
         v-for="(option, i) in options"
@@ -77,13 +77,14 @@
       </select-option>
       <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
     </ul>
-    <div id="arrow" data-popper-arrow></div>
+    <div class="arrow" data-popper-arrow></div>
   </div>
 </template>
 
 <script lang="ts">
   import axios from 'axios';
   import SelectOption from './option.vue'
+  import { Instance } from '@popperjs/core/lib/types'
   import { createPopper } from '@popperjs/core'
   import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 
@@ -104,9 +105,8 @@
     @Prop({ required: true }) private visible: boolean
     @Prop({ required: true }) private options: Array<{ label: string, value: string | number | boolean }>
 
-    private reference: any = {}
-    private dropdown: any = {}
-    private popperInstance: any = {}
+    private popper: HTMLElement
+    private popperInstance: Instance
 
     private existsPopper: boolean = false
     private hoverIndex: number = 0
@@ -126,7 +126,7 @@
     private onChangeVisible(val: boolean): void {
       if (val) {
         if (this.selectedLabel) {
-          this.hoverIndex = this.options.findIndex((option) => option.label == this.selectedLabel)
+          this.hoverIndex = this.options.findIndex((option) => option.label === this.selectedLabel)
         }
         if (!this.existsPopper) {
           this.onCreatePopper()
@@ -138,10 +138,9 @@
     }
 
     private onCreatePopper(): void {
-      const reference = this.$parent.$refs.reference as Vue
-      this.reference = reference.$el
-      this.dropdown = this.$el
-      this.popperInstance = createPopper(this.reference as Element, this.dropdown as HTMLElement, {
+      const reference = (this.$parent.$refs.reference as Vue).$el
+      this.popper = this.$el as HTMLElement
+      this.popperInstance = createPopper(reference, this.popper, {
         modifiers: [
           {
             name: 'offset',
@@ -152,16 +151,16 @@
         ],
       })
       this.existsPopper = true
-      document.body.appendChild(this.dropdown)
+      document.body.appendChild(this.popper)
     }
 
     private show(): void {
       this.popperInstance.update()
-      this.dropdown.setAttribute('data-show', '');
+      this.popper.setAttribute('data-show', '');
     }
 
     private hide(): void {
-      this.dropdown.removeAttribute('data-show');
+      this.popper.removeAttribute('data-show');
     }
 
     private onHoverOption(index: number): void {
