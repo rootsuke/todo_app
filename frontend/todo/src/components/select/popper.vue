@@ -65,13 +65,12 @@
   <div class="sl-popper" role="tooltip">
     <ul class="option-list">
       <select-option
-        v-for="(option, i) in options"
+        v-for="option in options"
         :key="option.value"
         :value="option.value"
         :label="option.label"
         :selectedLabel="selectedLabel"
-        :hoverIndex="hoverIndex"
-        :index="i"
+        :hoverLabel="hoverLabel"
         @select-option="onSelectOption"
         @hover-option="onHoverOption">
       </select-option>
@@ -109,7 +108,7 @@
     private popperInstance: Instance
 
     private existsPopper: boolean = false
-    private hoverIndex: number = 0
+    private hoverLabel: string = ''
 
     get isOptionsEmpty() {
       return this.options.length === 0
@@ -126,7 +125,7 @@
     private onChangeVisible(val: boolean): void {
       if (val) {
         if (this.selectedLabel) {
-          this.hoverIndex = this.options.findIndex((option) => option.label === this.selectedLabel)
+          this.hoverLabel = this.selectedLabel
         }
         if (!this.existsPopper) {
           this.onCreatePopper()
@@ -163,8 +162,8 @@
       this.popper.removeAttribute('data-show');
     }
 
-    private onHoverOption(index: number): void {
-      this.hoverIndex = index
+    private onHoverOption(label: string): void {
+      this.hoverLabel = label
     }
 
     @Emit('select-option')

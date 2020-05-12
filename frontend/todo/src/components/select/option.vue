@@ -38,15 +38,14 @@
     @Prop({ required: true }) private value: Val
     @Prop({ required: true }) private label: string
     @Prop({ required: true }) private selectedLabel: string
-    @Prop({ required: true }) private hoverIndex: number
-    @Prop({ required: true }) private index: number
+    @Prop({ required: true }) private hoverLabel: string
 
     get isSelected(): boolean {
       return this.label === this.selectedLabel
     }
 
     get isHover(): boolean {
-      return this.index === this.hoverIndex
+      return this.label === this.hoverLabel
     }
 
     private onSelectOption(): void {
@@ -54,7 +53,7 @@
     }
 
     private onHoverOption(): void {
-      this.$emit('hover-option', this.index)
+      this.$emit('hover-option', this.label)
     }
   }
 </script>
