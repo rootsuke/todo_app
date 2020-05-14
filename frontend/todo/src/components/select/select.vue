@@ -45,12 +45,20 @@
         <i v-if="showClearBtn" class="far fa-times-circle sl-icon" @click.stop="onClear"></i>
       </template>
     </sl-input>
-    <popper ref="popper" :selectedLabel="selectedLabel" :visible="visible" :options="filteredItems" @select-option="onSelectOption"></popper>
+    <popper
+      ref="popper"
+      :selectedLabel="selectedLabel"
+      :visible="visible"
+      :options="filteredItems"
+      :inputWidth="inputWidth"
+      @select-option="onSelectOption">
+    </popper>
   </div>
 </template>
 
 <script lang='ts'>
   import vClickOutside from 'v-click-outside'
+  import { addResizeObserver } from '../../utils/resize_observer'
   import Input from './input.vue';
   import Popper from './popper.vue'
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -81,6 +89,7 @@
     private currentPlaceholder: string = ''
     private mousedownClass: string = ''
     private isInputHover: boolean = false
+    private inputWidth: number = 0
 
     private vcoConfig = {
       handler: this.onClickOutside,
@@ -140,6 +149,11 @@
     private mounted(): void {
       this.selectedLabel = this.getSelectedLabel(this.value)
       this.tmpQuery = this.selectedLabel
+      addResizeObserver(document.querySelector('.sl-input-wrapper'), this.setInputWidth)
+    }
+
+    private setInputWidth(entry) {
+      this.inputWidth = entry.contentRect.width
     }
 
     private onClickOutside(): void {

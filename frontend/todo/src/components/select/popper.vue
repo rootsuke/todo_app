@@ -62,7 +62,7 @@
 </style>
 
 <template>
-  <div class="sl-popper" role="tooltip">
+  <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
     <ul class="option-list">
       <select-option
         v-for="option in options"
@@ -103,6 +103,7 @@
     @Prop({ required: true }) private selectedLabel: string
     @Prop({ required: true }) private visible: boolean
     @Prop({ required: true }) private options: Array<{ label: string, value: string | number | boolean }>
+    @Prop({ required: true }) private inputWidth: number
 
     private popper: HTMLElement
     private popperInstance: Instance
@@ -112,6 +113,10 @@
 
     get isOptionsEmpty() {
       return this.options.length === 0
+    }
+
+    get minWidth(): string {
+      return this.inputWidth + 'px'
     }
 
     @Watch('options')
