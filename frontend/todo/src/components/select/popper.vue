@@ -1,6 +1,7 @@
 <style>
   .sl-popper {
     box-sizing: border-box;
+    overflow: hidden;
     background-color: white;
     color: #606266;
     border: 1px solid #E4E7ED;
@@ -8,7 +9,15 @@
     border-radius: 4px;
   }
 
-  .option-list {
+  .sl-option-wrapper {
+    position: relative;
+    max-height: 274px;
+    margin-right: -15px;
+    margin-bottom: -15px;
+    overflow: scroll;
+  }
+
+  .sl-option-list {
     box-sizing: border-box;
     margin: 0;
     padding: 6px 0;
@@ -63,19 +72,21 @@
 
 <template>
   <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
-    <ul class="option-list">
-      <select-option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-        :label="option.label"
-        :selectedLabel="selectedLabel"
-        :hoverLabel="hoverLabel"
-        @select-option="onSelectOption"
-        @hover-option="onHoverOption">
-      </select-option>
-      <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
-    </ul>
+    <div class="sl-option-wrapper">
+      <ul class="sl-option-list">
+        <select-option
+          v-for="option in options"
+          :key="option.value"
+          :value="option.value"
+          :label="option.label"
+          :selectedLabel="selectedLabel"
+          :hoverLabel="hoverLabel"
+          @select-option="onSelectOption"
+          @hover-option="onHoverOption">
+        </select-option>
+        <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
+      </ul>
+    </div>
     <div class="arrow" data-popper-arrow></div>
   </div>
 </template>
