@@ -90,7 +90,9 @@
           </select-option>
           <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
         </ul>
-        <sl-scrollbar :heightPercentage="heightPercentage"></sl-scrollbar>
+        <sl-scrollbar :heightPercentage="heightPercentage" type="vertical"></sl-scrollbar>
+        <!-- 横方向のスクロールは不要なのでコメント化 -->
+        <!-- <sl-scrollbar :widthPercentage="widthPercentage" type="horizontal"></sl-scrollbar> -->
       </div>
     </div>
     <div class="arrow" data-popper-arrow></div>
@@ -131,6 +133,8 @@
     private hoverLabel: string = ''
 
     private heightPercentage: number = 0
+    // 横方向のスクロールは不要なのでコメント化
+    // private widthPercentage: number = 0
 
     get isOptionsEmpty() {
       return this.options.length === 0
@@ -198,18 +202,35 @@
     private calcScrollbarPercentage(): void {
       this.$nextTick(() => {
         const wrapper = this.$refs.wrapper as Element
-        const heightWithHiddenArea = wrapper.scrollHeight
-        const visibleHeight = wrapper.clientHeight
-        if (heightWithHiddenArea === 0 || visibleHeight === 0) {
-          this.heightPercentage = 0
-          return
-        }
-        console.log("clientHeight", wrapper.clientHeight)
-        console.log("scrollHeight", wrapper.scrollHeight)
-        this.heightPercentage = (wrapper.clientHeight / wrapper.scrollHeight) * 100
-        console.log(this.heightPercentage)
+        this.heightPercentage = this.calcHeightPercentage(wrapper)
+        // 横方向のスクロールは不要なのでコメント化
+        // this.widthPercentage = this.calcWidthPercentage(wrapper)
       })
     }
+
+    private calcHeightPercentage(wrapper: Element): number {
+      const fullHeight = wrapper.scrollHeight
+      const visibleHeight = wrapper.clientHeight
+      if (fullHeight === 0 || visibleHeight === 0) {
+        return 0
+      } else {
+        return (visibleHeight / fullHeight) * 100
+      }
+    }
+
+    // 横方向のスクロールは不要なのでコメント化
+    // private calcWidthPercentage(wrapper: Element): number {
+    //   const fullWidth = wrapper.scrollWidth
+    //   const visibleWidth = wrapper.clientWidth
+    //   if (fullWidth === 0 || visibleWidth === 0) {
+    //     return 0
+    //   } else {
+    //     console.log("clientWidth", visibleWidth)
+    //     console.log("scrollWidth", fullWidth)
+    //     console.log((visibleWidth / fullWidth) * 100)
+    //     return (visibleWidth / fullWidth) * 100
+    //   }
+    // }
 
     @Emit('select-option')
     private onSelectOption(val: Val): Val {
