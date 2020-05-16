@@ -1,7 +1,6 @@
 <style lang='scss'>
   .sl-popper {
     box-sizing: border-box;
-    overflow: hidden;
     background-color: white;
     color: #606266;
     border: 1px solid #E4E7ED;
@@ -9,8 +8,12 @@
     border-radius: 4px;
   }
 
-  .sl-option-wrapper {
+  .sl-popper-menu {
+    overflow: hidden;
     position: relative;
+  }
+
+  .sl-option-wrapper {
     max-height: 274px;
     margin-right: -15px;
     margin-bottom: -15px;
@@ -72,21 +75,23 @@
 
 <template>
   <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
-    <div ref="wrapper" class="sl-option-wrapper">
-      <ul class="sl-option-list">
-        <select-option
-          v-for="option in options"
-          :key="option.value"
-          :value="option.value"
-          :label="option.label"
-          :selectedLabel="selectedLabel"
-          :hoverLabel="hoverLabel"
-          @select-option="onSelectOption"
-          @hover-option="onHoverOption">
-        </select-option>
-        <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
-      </ul>
-      <sl-scrollbar :heightPercentage="heightPercentage"></sl-scrollbar>
+    <div class="sl-popper-menu">
+      <div ref="wrapper" class="sl-option-wrapper">
+        <ul class="sl-option-list">
+          <select-option
+            v-for="option in options"
+            :key="option.value"
+            :value="option.value"
+            :label="option.label"
+            :selectedLabel="selectedLabel"
+            :hoverLabel="hoverLabel"
+            @select-option="onSelectOption"
+            @hover-option="onHoverOption">
+          </select-option>
+          <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
+        </ul>
+        <sl-scrollbar :heightPercentage="heightPercentage"></sl-scrollbar>
+      </div>
     </div>
     <div class="arrow" data-popper-arrow></div>
   </div>
