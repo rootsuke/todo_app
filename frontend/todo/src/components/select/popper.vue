@@ -1,4 +1,4 @@
-<style>
+<style lang='scss'>
   .sl-popper {
     box-sizing: border-box;
     overflow: hidden;
@@ -72,7 +72,7 @@
 
 <template>
   <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
-    <div class="sl-option-wrapper">
+    <div ref="wrapper" class="sl-option-wrapper">
       <ul class="sl-option-list">
         <select-option
           v-for="option in options"
@@ -86,6 +86,7 @@
         </select-option>
         <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
       </ul>
+      <sl-scrollbar :heightPercentage="heightPercentage"></sl-scrollbar>
     </div>
     <div class="arrow" data-popper-arrow></div>
   </div>
@@ -94,6 +95,7 @@
 <script lang="ts">
   import axios from 'axios';
   import SelectOption from './option.vue'
+  import ScrollBar from './scrollbar.vue'
   import { Instance } from '@popperjs/core/lib/types'
   import { createPopper } from '@popperjs/core'
   import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
@@ -108,6 +110,7 @@
   @Component({
     components: {
       'select-option': SelectOption,
+      'sl-scrollbar': ScrollBar,
     },
   })
   export default class Popper extends Vue {
@@ -122,6 +125,8 @@
     private existsPopper: boolean = false
     private hoverLabel: string = ''
 
+    private heightPercentage: number = 0
+
     get isOptionsEmpty() {
       return this.options.length === 0
     }
@@ -134,6 +139,8 @@
     private onChangeOptions(): void {
       if (this.existsPopper) {
         this.popperInstance.update()
+        console.log("option")
+        this.calcScrollbarPercentage()
       }
     }
 
@@ -153,6 +160,7 @@
     }
 
     private onCreatePopper(): void {
+      this.calcScrollbarPercentage()
       const reference = (this.$parent.$refs.reference as Vue).$el
       this.popper = this.$el as HTMLElement
       this.popperInstance = createPopper(reference, this.popper, {
@@ -180,6 +188,13 @@
 
     private onHoverOption(label: string): void {
       this.hoverLabel = label
+    }
+
+    private calcScrollbarPercentage(): void {
+      this.$nextTick(() => {
+        const wrapper = this.$refs.wrapper as Element
+        this.heightPercentage = (wrapper.clientHeight / wrapper.scrollHeight) * 100
+      })
     }
 
     @Emit('select-option')
