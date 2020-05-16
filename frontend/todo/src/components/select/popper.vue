@@ -154,13 +154,13 @@
           this.onCreatePopper()
         }
         this.show()
+        this.calcScrollbarPercentage()
       } else {
         this.hide()
       }
     }
 
     private onCreatePopper(): void {
-      this.calcScrollbarPercentage()
       const reference = (this.$parent.$refs.reference as Vue).$el
       this.popper = this.$el as HTMLElement
       this.popperInstance = createPopper(reference, this.popper, {
@@ -193,7 +193,16 @@
     private calcScrollbarPercentage(): void {
       this.$nextTick(() => {
         const wrapper = this.$refs.wrapper as Element
+        const heightWithHiddenArea = wrapper.scrollHeight
+        const visibleHeight = wrapper.clientHeight
+        if (heightWithHiddenArea === 0 || visibleHeight === 0) {
+          this.heightPercentage = 0
+          return
+        }
+        console.log("clientHeight", wrapper.clientHeight)
+        console.log("scrollHeight", wrapper.scrollHeight)
         this.heightPercentage = (wrapper.clientHeight / wrapper.scrollHeight) * 100
+        console.log(this.heightPercentage)
       })
     }
 

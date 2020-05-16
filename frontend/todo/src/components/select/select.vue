@@ -138,7 +138,7 @@
     @Watch('tmpQuery')
     private onChangeTmpQuery(val: string): void {
       if (this.filterable) {
-        this.query = this.tmpQuery
+        this.query = this.visible ? this.tmpQuery : ''
       }
     }
 
