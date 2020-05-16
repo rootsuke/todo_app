@@ -33,7 +33,7 @@
 </style>
 
 <template>
-  <div class="sl-scrollbar is-vertical"><div :style="{ height: height }" class="bar"></div></div>
+  <div class="sl-scrollbar is-vertical"><div :style="{ height: height, transform: offset }" class="bar"></div></div>
 </template>
 
 <script lang='ts'>
@@ -42,10 +42,15 @@
   @Component
   export default class extends Vue {
     @Prop({ required: true }) private heightPercentage: number
+    @Prop({ required: true }) private offsetHeightPercetage: number
 
-    get height() {
+    get height(): string {
       // メニューの高さが最大の高さに収まっている場合は、スクロールバーを表示しない
       return this.heightPercentage < 100 ? `${this.heightPercentage}%` : ''
+    }
+
+    get offset(): string {
+      return this.offsetHeightPercetage === 0 ? '' : `translateY(${this.offsetHeightPercetage}%)`
     }
 
   }

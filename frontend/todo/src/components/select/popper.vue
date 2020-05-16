@@ -76,7 +76,7 @@
 <template>
   <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
     <div class="sl-popper-menu">
-      <div ref="wrapper" class="sl-option-wrapper">
+      <div ref="wrapper" class="sl-option-wrapper" @scroll="onScroll">
         <ul class="sl-option-list">
           <select-option
             v-for="option in options"
@@ -90,7 +90,11 @@
           </select-option>
           <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
         </ul>
-        <sl-scrollbar :heightPercentage="heightPercentage" type="vertical"></sl-scrollbar>
+        <sl-scrollbar
+          :heightPercentage="heightPercentage"
+          :offsetHeightPercetage="offsetHeightPercetage"
+          type="vertical">
+        </sl-scrollbar>
         <!-- 横方向のスクロールは不要なのでコメント化 -->
         <!-- <sl-scrollbar :widthPercentage="widthPercentage" type="horizontal"></sl-scrollbar> -->
       </div>
@@ -135,6 +139,7 @@
     private heightPercentage: number = 0
     // 横方向のスクロールは不要なのでコメント化
     // private widthPercentage: number = 0
+    private offsetHeightPercetage: number = 0
 
     get isOptionsEmpty() {
       return this.options.length === 0
@@ -148,7 +153,6 @@
     private onChangeOptions(): void {
       if (this.existsPopper) {
         this.popperInstance.update()
-        console.log("option")
         this.calcScrollbarPercentage()
       }
     }
@@ -231,6 +235,13 @@
     //     return (visibleWidth / fullWidth) * 100
     //   }
     // }
+
+    private onScroll(): void {
+      const wrapper = this.$refs.wrapper as Element
+      const offsetHeight = wrapper.scrollTop
+      const visibleHeight = wrapper.clientHeight
+      this.offsetHeightPercetage = (offsetHeight / visibleHeight) * 100
+    }
 
     @Emit('select-option')
     private onSelectOption(val: Val): Val {
