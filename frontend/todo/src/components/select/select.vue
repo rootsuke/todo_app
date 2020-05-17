@@ -166,7 +166,12 @@
         this.mousedownClass = className
         return false
       } else {
-        return !(this.mousedownClass.includes('sl-option-item') || className.includes('sl-option-item'))
+        return !(
+          this.mousedownClass.includes('sl-option-item') ||
+          this.mousedownClass.includes('sl-option-wrapper') ||
+          className.includes('sl-option-item') ||
+          className.includes('sl-option-wrapper')
+        )
       }
     }
 

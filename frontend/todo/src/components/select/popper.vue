@@ -15,9 +15,23 @@
 
   .sl-option-wrapper {
     max-height: 274px;
-    margin-right: -15px;
-    margin-bottom: -15px;
-    overflow: scroll;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &:hover {
+      &::-webkit-scrollbar {
+        display: block;
+        width: 6px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(144, 147, 153, 0.3);
+        border-radius: 4px;
+        &:hover {
+          background-color: rgba(144, 147, 153, 0.5);
+        }
+      }
+    }
   }
 
   .sl-option-list {
@@ -76,7 +90,7 @@
 <template>
   <div role="tooltip" class="sl-popper" :style="{ minWidth: minWidth }">
     <div class="sl-popper-menu">
-      <div ref="wrapper" class="sl-option-wrapper" @scroll="onScroll">
+      <div ref="wrapper" class="sl-option-wrapper">
         <ul class="sl-option-list">
           <select-option
             v-for="option in options"
@@ -90,13 +104,6 @@
           </select-option>
           <li v-show="isOptionsEmpty" class="empty-text">no data matches.</li>
         </ul>
-        <sl-scrollbar
-          :heightPercentage="heightPercentage"
-          :offsetHeightPercetage="offsetHeightPercetage"
-          type="vertical">
-        </sl-scrollbar>
-        <!-- 横方向のスクロールは不要なのでコメント化 -->
-        <!-- <sl-scrollbar :widthPercentage="widthPercentage" type="horizontal"></sl-scrollbar> -->
       </div>
     </div>
     <div class="arrow" data-popper-arrow></div>
@@ -106,7 +113,6 @@
 <script lang="ts">
   import axios from 'axios';
   import SelectOption from './option.vue'
-  import ScrollBar from './scrollbar.vue'
   import { Instance } from '@popperjs/core/lib/types'
   import { createPopper } from '@popperjs/core'
   import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
@@ -121,7 +127,6 @@
   @Component({
     components: {
       'select-option': SelectOption,
-      'sl-scrollbar': ScrollBar,
     },
   })
   export default class Popper extends Vue {
@@ -136,11 +141,6 @@
     private existsPopper: boolean = false
     private hoverLabel: string = ''
 
-    private heightPercentage: number = 0
-    // 横方向のスクロールは不要なのでコメント化
-    // private widthPercentage: number = 0
-    private offsetHeightPercetage: number = 0
-
     get isOptionsEmpty() {
       return this.options.length === 0
     }
@@ -153,7 +153,6 @@
     private onChangeOptions(): void {
       if (this.existsPopper) {
         this.popperInstance.update()
-        this.calcScrollbarPercentage()
       }
     }
 
@@ -167,7 +166,6 @@
           this.onCreatePopper()
         }
         this.show()
-        this.calcScrollbarPercentage()
       } else {
         this.hide()
       }
@@ -201,46 +199,6 @@
 
     private onHoverOption(label: string): void {
       this.hoverLabel = label
-    }
-
-    private calcScrollbarPercentage(): void {
-      this.$nextTick(() => {
-        const wrapper = this.$refs.wrapper as Element
-        this.heightPercentage = this.calcHeightPercentage(wrapper)
-        // 横方向のスクロールは不要なのでコメント化
-        // this.widthPercentage = this.calcWidthPercentage(wrapper)
-      })
-    }
-
-    private calcHeightPercentage(wrapper: Element): number {
-      const fullHeight = wrapper.scrollHeight
-      const visibleHeight = wrapper.clientHeight
-      if (fullHeight === 0 || visibleHeight === 0) {
-        return 0
-      } else {
-        return (visibleHeight / fullHeight) * 100
-      }
-    }
-
-    // 横方向のスクロールは不要なのでコメント化
-    // private calcWidthPercentage(wrapper: Element): number {
-    //   const fullWidth = wrapper.scrollWidth
-    //   const visibleWidth = wrapper.clientWidth
-    //   if (fullWidth === 0 || visibleWidth === 0) {
-    //     return 0
-    //   } else {
-    //     console.log("clientWidth", visibleWidth)
-    //     console.log("scrollWidth", fullWidth)
-    //     console.log((visibleWidth / fullWidth) * 100)
-    //     return (visibleWidth / fullWidth) * 100
-    //   }
-    // }
-
-    private onScroll(): void {
-      const wrapper = this.$refs.wrapper as Element
-      const offsetHeight = wrapper.scrollTop
-      const visibleHeight = wrapper.clientHeight
-      this.offsetHeightPercetage = (offsetHeight / visibleHeight) * 100
     }
 
     @Emit('select-option')
