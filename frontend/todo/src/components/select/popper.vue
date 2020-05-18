@@ -14,7 +14,7 @@
   }
 
   .sl-option-wrapper {
-    max-height: 274px;
+    max-height: 260px;
     overflow-y: scroll;
     &::-webkit-scrollbar {
       display: none;
@@ -111,7 +111,6 @@
 </template>
 
 <script lang="ts">
-  import axios from 'axios';
   import SelectOption from './option.vue'
   import { Instance } from '@popperjs/core/lib/types'
   import { createPopper } from '@popperjs/core'
@@ -166,6 +165,9 @@
           this.onCreatePopper()
         }
         this.show()
+        this.$nextTick(() => {
+          this.scrollToSelected()
+        })
       } else {
         this.hide()
       }
@@ -199,6 +201,27 @@
 
     private onHoverOption(label: string): void {
       this.hoverLabel = label
+    }
+
+    private scrollToSelected(): void {
+      const menu = this.$refs.wrapper as HTMLElement
+      if (!this.selectedLabel) {
+        menu.scrollTop = 0
+        return
+      }
+
+      const menuTop = menu.scrollTop
+      const menuBottom = menuTop + menu.clientHeight
+
+      const index = this.options.findIndex(option => option.label === this.selectedLabel)
+      const selectedTop = 34 * index + 6
+      const selectedBottom = selectedTop + 34
+
+      if (selectedTop < menuTop) {
+        menu.scrollTop = selectedTop
+      } else if (selectedBottom > menuBottom) {
+        menu.scrollTop = selectedBottom - menu.clientHeight
+      }
     }
 
     @Emit('select-option')
