@@ -35,6 +35,7 @@
     }
 
     private onSuccessHandler(res: Response) {
+      console.log(res.data.info)
       this.tasks = res.data.info
     }
 
