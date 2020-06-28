@@ -17,4 +17,4 @@ jobs:
           command: rails db:create db:migrate
       - run:
           name: rails t
-          command: rails t
+          command: cd backend && rails t
