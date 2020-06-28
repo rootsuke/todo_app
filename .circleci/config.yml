@@ -6,6 +6,10 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.6.0-stretch-node
+      - image: circleci/mysql:5.7
+        name: db
+        environment:
+          MYSQL_ROOT_PASSWORD: root
     executor: ruby/default
     steps:
       - checkout
