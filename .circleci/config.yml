@@ -10,6 +10,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
+          name: docker-compose build
+          command: docker-compose build
+      - run:
+          name: docker-compose up
+          command: docker-compose up -d
+      - run:
+          name: migration
+          command: docker-compose exec api rails db:create db:migrate
+      - run:
+          name: rails t
+          command: docker-compose exec api rails t
