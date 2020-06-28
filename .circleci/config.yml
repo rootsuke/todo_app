@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: bundle install
-          command: cd backend && bundle install -j4 --without production
+          command: cd backend && gem install bundler && bundle install -j4 --without production
       - run:
           name: migration
           command: rails db:create db:migrate
