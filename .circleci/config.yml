@@ -12,7 +12,7 @@ jobs:
       - checkout
       - run:
           name: bundle install
-          command: bundle install -j4 --without production
+          command: pwd && ls && bundle install -j4 --without production
       - run:
           name: migration
           command: rails db:create db:migrate
