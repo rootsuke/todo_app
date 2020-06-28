@@ -18,7 +18,7 @@ jobs:
           command: cd backend && gem install bundler -v 1.17.3 && bundle install -j4 --without production
       - run:
           name: migration
-          command: rails db:create db:migrate
+          command: cd backend && rails db:create db:migrate
       - run:
           name: rails t
           command: cd backend && rails t
