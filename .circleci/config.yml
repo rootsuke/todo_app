@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2 
+
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.6.0-stretch-node
+        environment:
+          - RAILS_ENV: 'test'
+      - image: circleci/mysql:5.7
+        name: db
+        environment:
+          - MYSQL_ROOT_PASSWORD: root
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: bundle install
+          command: cd backend && gem install bundler -v 1.17.3 && bundle install -j4 --without production
+      - run:
+          name: migration
+          command: cd backend && rails db:create db:migrate
+      - run:
+          name: rails t
+          command: cd backend && rails t
