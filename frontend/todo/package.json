@@ -16,7 +16,7 @@
     "core-js": "^3.6.4",
     "element-ui": "^2.13.0",
     "jquery": "^3.4.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^8.0.2",
     "sass-resources-loader": "^2.0.1",
     "v-click-outside": "^3.0.1",
